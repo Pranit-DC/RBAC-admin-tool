@@ -239,21 +239,6 @@ model UserRole {
 - ✅ `.env` excluded from version control
 
 > **⚠️ Security Note**: This README shows API endpoints and schema design for educational/portfolio purposes. All sensitive credentials (DATABASE_URL, JWT_SECRET) are stored in `.env` file which is **never committed** to the repository. The test credentials are for demo purposes only.
-
----
-
-## 🚀 Deployment
-
-### Deploy to Vercel
-1. Push code to GitHub
-2. Import project in Vercel
-3. Add environment variables
-4. Deploy!
-
-```bash
-vercel --prod
-```
-
 ---
 
 ## 📝 License
