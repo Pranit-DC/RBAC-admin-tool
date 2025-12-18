@@ -89,7 +89,7 @@ export default function PermissionsPage() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-sm p-8">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
         <p className="text-center text-gray-500">Loading permissions...</p>
       </div>
     );
@@ -104,13 +104,13 @@ export default function PermissionsPage() {
         </div>
         <button
           onClick={openCreateModal}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
         >
           + Add Permission
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -130,7 +130,7 @@ export default function PermissionsPage() {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {permissions.map((permission) => (
-              <tr key={permission.id} className="hover:bg-gray-50">
+              <tr key={permission.id} className="hover:bg-gray-50:bg-gray-800/50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="text-sm font-medium text-gray-900">{permission.name}</span>
                 </td>
@@ -145,13 +145,13 @@ export default function PermissionsPage() {
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <button
                     onClick={() => handleEdit(permission)}
-                    className="text-blue-600 hover:text-blue-900 mr-4"
+                    className="text-blue-600 hover:text-blue-700:text-blue-300 mr-4"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(permission.id)}
-                    className="text-red-600 hover:text-red-900"
+                    className="text-red-600 hover:text-red-700:text-red-300"
                   >
                     Delete
                   </button>
@@ -169,21 +169,21 @@ export default function PermissionsPage() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 w-full max-w-md">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
               {editingId ? 'Edit Permission' : 'Create Permission'}
             </h2>
 
             {error && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-600">{error}</p>
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Permission Name *
                 </label>
                 <input
@@ -191,19 +191,19 @@ export default function PermissionsPage() {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500:ring-blue-600 text-gray-900"
                   placeholder="e.g., users.read"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Description
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500:ring-blue-600 text-gray-900"
                   rows={3}
                   placeholder="Brief description..."
                 />
@@ -213,13 +213,13 @@ export default function PermissionsPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50:bg-gray-800 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
                 >
                   {editingId ? 'Update' : 'Create'}
                 </button>
@@ -231,3 +231,4 @@ export default function PermissionsPage() {
     </div>
   );
 }
+

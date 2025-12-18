@@ -149,7 +149,7 @@ export default function RolesPage() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-sm p-8">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
         <p className="text-center text-gray-500">Loading roles...</p>
       </div>
     );
@@ -164,13 +164,13 @@ export default function RolesPage() {
         </div>
         <button
           onClick={openCreateModal}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           + Add Role
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -190,7 +190,7 @@ export default function RolesPage() {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {roles.map((role) => (
-              <tr key={role.id} className="hover:bg-gray-50">
+              <tr key={role.id} className="hover:bg-gray-50:bg-gray-800/50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="text-sm font-medium text-gray-900">{role.name}</span>
                 </td>
@@ -248,14 +248,14 @@ export default function RolesPage() {
 
       {/* Create/Edit Role Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl border border-gray-200 shadow-xl p-6 w-full max-w-md">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
               {editingId ? 'Edit Role' : 'Create Role'}
             </h2>
 
             {error && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-600">{error}</p>
               </div>
             )}
@@ -270,7 +270,7 @@ export default function RolesPage() {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500:ring-blue-600 text-gray-900"
                   placeholder="e.g., Admin"
                 />
               </div>
@@ -279,13 +279,13 @@ export default function RolesPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50:bg-gray-800/50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   {editingId ? 'Update' : 'Create'}
                 </button>
@@ -297,12 +297,12 @@ export default function RolesPage() {
 
       {/* Assign Permissions Modal */}
       {showPermModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl border border-gray-200 shadow-xl p-6 w-full max-w-md">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Assign Permissions</h2>
 
             {error && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-600">{error}</p>
               </div>
             )}
@@ -311,13 +311,13 @@ export default function RolesPage() {
               {permissions.map((perm) => (
                 <label
                   key={perm.id}
-                  className="flex items-start p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer"
+                  className="flex items-start p-3 border border-gray-200 rounded-lg hover:bg-gray-50:bg-gray-800/50 cursor-pointer"
                 >
                   <input
                     type="checkbox"
                     checked={selectedPermissions.includes(perm.id)}
                     onChange={() => handlePermissionToggle(perm.id)}
-                    className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500:ring-blue-600 border-gray-300 rounded"
                   />
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-900">{perm.name}</p>
@@ -333,13 +333,13 @@ export default function RolesPage() {
               <button
                 type="button"
                 onClick={() => setShowPermModal(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50:bg-gray-800/50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSavePermissions}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Save
               </button>
@@ -350,3 +350,4 @@ export default function RolesPage() {
     </div>
   );
 }
+
