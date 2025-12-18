@@ -1,4 +1,3 @@
-import { Role } from '@prisma/client';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import prisma from '../../../lib/prisma';
 import { NextRequest } from 'next/server';
