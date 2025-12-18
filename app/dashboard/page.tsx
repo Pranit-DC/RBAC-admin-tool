@@ -12,6 +12,7 @@ import {
   FiCheck,
   FiAlertCircle
 } from 'react-icons/fi';
+import { DashboardSkeleton } from '@/components/skeleton-loader';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -96,6 +97,10 @@ export default function DashboardPage() {
     { title: 'Permissions', subtitle: 'Control access', icon: FiLock, href: '/dashboard/permissions', color: 'orange', bgColor: 'bg-orange-50', iconColor: 'text-orange-600' },
   ];
 
+  if (loading) {
+    return <DashboardSkeleton />;
+  }
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -107,11 +112,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Cards */}
-      {loading ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Loading...</p>
-        </div>
-      ) : (
+      {(
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {statsCards.map((stat) => {
             const Icon = stat.icon;

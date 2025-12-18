@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { TableSkeleton } from '@/components/skeleton-loader';
 
 interface Role {
   id: string;
@@ -90,11 +91,7 @@ export default function UsersPage() {
   };
 
   if (loading) {
-    return (
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
-        <p className="text-center text-gray-500">Loading users...</p>
-      </div>
-    );
+    return <TableSkeleton />;
   }
 
   return (
