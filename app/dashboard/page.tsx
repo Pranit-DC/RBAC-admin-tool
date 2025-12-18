@@ -39,21 +39,22 @@ export default function DashboardPage() {
   };
 
   const fetchStats = () => {
-    Promise.all([
-      fetch('/api/users').then(r => r.json()),
-      fetch('/api/roles').then(r => r.json()),
-      fetch('/api/permissions').then(r => r.json()),
-    ])
-      .then(([users, roles, permissions]) => {
-        setStats({
-          users: users.length,
-          roles: roles.length,
-          permissions: permissions.length,
-        });
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  };
+  Promise.all([
+    fetch('/api/users').then((r: Response) => r.json()),
+    fetch('/api/roles').then((r: Response) => r.json()),
+    fetch('/api/permissions').then((r: Response) => r.json()),
+  ])
+    .then(([users, roles, permissions]: [any[], any[], any[]]) => {
+      setStats({
+        users: users.length,
+        roles: roles.length,
+        permissions: permissions.length,
+      });
+      setLoading(false);
+    })
+    .catch(() => setLoading(false));
+};
+
 
   const handleAiCommand = async (e: React.FormEvent) => {
     e.preventDefault();

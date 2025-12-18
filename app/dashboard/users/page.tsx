@@ -69,7 +69,10 @@ export default function UsersPage() {
 
   const openRolesModal = (user: User) => {
     setSelectedUser(user.id);
-    setSelectedRoles(user.user_roles.map(ur => ur.role.id));
+    setSelectedRoles(
+  user.user_roles.map((ur: { role: Role }) => ur.role.id)
+);
+    // setSelectedRoles(user.user_roles.map(ur => ur.role.id));
     setShowModal(true);
     setError('');
   };
@@ -94,12 +97,18 @@ export default function UsersPage() {
 
     // Frontend validation: prevent removing own admin role
     if (currentUserId === selectedUser) {
-      const currentUser = users.find(u => u.id === selectedUser);
-      const hadAdminRole = currentUser?.user_roles.some(
-        ur => ur.role.name.toLowerCase() === 'admin'
-      );
+      const currentUser = users.find((u: User) => u.id === selectedUser);
+    //   const currentUser = users.find(u => u.id === selectedUser);
+        const hadAdminRole = currentUser?.user_roles.some(
+    (ur: { role: Role }) => ur.role.name.toLowerCase() === 'admin'
+    );
+
       
-      const adminRole = roles.find(r => r.name.toLowerCase() === 'admin');
+        const adminRole = roles.find(
+    (r: Role) => r.name.toLowerCase() === 'admin'
+    );
+
+      //   const adminRole = roles.find(r => r.name.toLowerCase() === 'admin');
       const hasAdminRoleInSelection = adminRole && selectedRoles.includes(adminRole.id);
       
       if (hadAdminRole && !hasAdminRoleInSelection) {

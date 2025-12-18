@@ -62,8 +62,11 @@ export async function POST(req: NextRequest) {
 
     // INVARIANT: Auto-assign new permission to Admin role
     // Find Admin role (case-insensitive)
-    const allRoles = await prisma.role.findMany();
-    const adminRole = allRoles.find(r => r.name.toLowerCase() === 'admin');
+        const allRoles = await prisma.role.findMany();
+        const adminRole = allRoles.find(
+    (r: { name: string; id: string }) => r.name.toLowerCase() === 'admin'
+    );
+    // const adminRole = allRoles.find(r => r.name.toLowerCase() === 'admin');
     
     if (!adminRole) {
       // Rollback: delete the permission we just created

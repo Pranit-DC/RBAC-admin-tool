@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import prisma from '../../../lib/prisma';
 import { NextRequest } from 'next/server';
@@ -188,8 +189,11 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
 
         // INVARIANT: Auto-assign to Admin role
         // Find Admin role (case-insensitive)
-        const allRoles = await prisma.role.findMany();
-        const adminRole = allRoles.find(r => r.name.toLowerCase() === 'admin');
+                const allRoles = await prisma.role.findMany();
+                const adminRole = allRoles.find(
+        (r: Role) => r.name.toLowerCase() === 'admin'
+        );
+        // const adminRole = allRoles.find(r => r.name.toLowerCase() === 'admin');
         
         if (!adminRole) {
           // Rollback: delete the permission we just created
