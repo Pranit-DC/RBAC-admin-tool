@@ -189,10 +189,23 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
 
         // INVARIANT: Auto-assign to Admin role
         // Find Admin role (case-insensitive)
-                const allRoles = await prisma.role.findMany();
-                const adminRole = allRoles.find(
+                       
+        // INVARIANT: Auto-assign to Admin role
+        const allRoles: Role[] = await prisma.role.findMany();
+
+        const adminRole = allRoles.find(
         (r: Role) => r.name.toLowerCase() === 'admin'
         );
+
+        if (!adminRole) {
+        await prisma.permission.delete({ where: { id: permission.id } });
+        return {
+            success: false,
+            message:
+            'System error: Admin role not found. Permission creation cancelled.',
+        };
+        }
+
         // const adminRole = allRoles.find(r => r.name.toLowerCase() === 'admin');
         
         if (!adminRole) {
