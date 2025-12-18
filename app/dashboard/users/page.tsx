@@ -230,7 +230,7 @@ export default function UsersPage() {
                 <td className="px-6 py-4">
                   <div className="flex flex-wrap gap-1">
                     {user.user_roles.length > 0 ? (
-                      user.user_roles.map((ur) => (
+                      user.user_roles.map((ur: { role: { id: string; name: string } }) => (
                         <span
                           key={ur.role.id}
                           className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700"
