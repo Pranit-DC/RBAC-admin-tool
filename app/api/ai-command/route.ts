@@ -186,18 +186,33 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
           },
         });
 
-        // INVARIANT: Auto-assign to Admin role (case-insensitive)
+        // INVARIANT: Auto-assign to Admin role
+        // Find Admin role (case-insensitive)
+                       
+        // INVARIANT: Auto-assign to Admin role
         const allRoles = await prisma.role.findMany();
+
         const adminRole = allRoles.find(
-          (r: { name: string }) => r.name.toLowerCase() === 'admin'
+        (r) => r.name.toLowerCase() === 'admin'
         );
 
         if (!adminRole) {
+        await prisma.permission.delete({ where: { id: permission.id } });
+        return {
+            success: false,
+            message:
+            'System error: Admin role not found. Permission creation cancelled.',
+        };
+        }
+
+        // const adminRole = allRoles.find(r => r.name.toLowerCase() === 'admin');
+        
+        if (!adminRole) {
           // Rollback: delete the permission we just created
           await prisma.permission.delete({ where: { id: permission.id } });
-          return {
-            success: false,
-            message: 'System error: Admin role not found. Permission creation cancelled.',
+          return { 
+            success: false, 
+            message: 'System error: Admin role not found. Permission creation cancelled. Please ensure an Admin role exists.'
           };
         }
         
@@ -340,7 +355,7 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
 
         // SAFETY: Check if target is Admin
         const isTargetAdmin = user.user_roles.some(
-          (ur: { role: { name: string } }) => ur.role.name.toLowerCase() === 'admin'
+          (ur) => ur.role.name.toLowerCase() === 'admin'
         );
 
         if (isTargetAdmin) {

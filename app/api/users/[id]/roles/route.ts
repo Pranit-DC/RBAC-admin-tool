@@ -37,7 +37,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
       // Check if user currently has admin role
       const hasAdminRole = currentUserRoles.some(
-        (ur: { role: { name: string } }) => ur.role.name.toLowerCase() === 'admin'
+        (ur) => ur.role.name.toLowerCase() === 'admin'
       );
 
       if (hasAdminRole) {
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         });
 
         const newRolesIncludeAdmin = newRoles.some(
-          (role: { name: string }) => role.name.toLowerCase() === 'admin'
+          (role) => role.name.toLowerCase() === 'admin'
         );
 
         if (!newRolesIncludeAdmin) {

@@ -58,7 +58,7 @@ export async function DELETE(
     }
 
     const isAdmin = currentUser.user_roles.some(
-      (ur: { role: { name: string } }) => ur.role.name.toLowerCase() === 'admin'
+      (ur) => ur.role.name.toLowerCase() === 'admin'
     );
 
     if (!isAdmin) {
@@ -98,7 +98,7 @@ export async function DELETE(
     }
 
     const targetIsAdmin = targetUser.user_roles.some(
-      (ur: { role: { name: string } }) => ur.role.name.toLowerCase() === 'admin'
+      (ur) => ur.role.name.toLowerCase() === 'admin'
     );
 
     if (targetIsAdmin) {
