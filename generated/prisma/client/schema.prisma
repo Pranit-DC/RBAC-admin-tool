@@ -8,26 +8,26 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  email      String   @unique
+  id         String     @id @default(uuid())
+  email      String     @unique
   password   String
-  created_at DateTime @default(now())
+  created_at DateTime   @default(now())
   user_roles UserRole[]
 }
 
 model Role {
-  id         String         @id @default(uuid())
-  name       String         @unique
-  created_at DateTime       @default(now())
-  user_roles UserRole[]
+  id               String           @id @default(uuid())
+  name             String           @unique
+  created_at       DateTime         @default(now())
+  user_roles       UserRole[]
   role_permissions RolePermission[]
 }
 
 model Permission {
-  id          String         @id @default(uuid())
-  name        String         @unique
-  description String?
-  created_at  DateTime       @default(now())
+  id               String           @id @default(uuid())
+  name             String           @unique
+  description      String?
+  created_at       DateTime         @default(now())
   role_permissions RolePermission[]
 }
 
@@ -36,13 +36,15 @@ model RolePermission {
   permission_id String
   role          Role       @relation(fields: [role_id], references: [id])
   permission    Permission @relation(fields: [permission_id], references: [id])
+
   @@id([role_id, permission_id])
 }
 
 model UserRole {
   user_id String
   role_id String
-  user    User @relation(fields: [user_id], references: [id])
-  role    Role @relation(fields: [role_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id])
+  role    Role   @relation(fields: [role_id], references: [id])
+
   @@id([user_id, role_id])
 }
