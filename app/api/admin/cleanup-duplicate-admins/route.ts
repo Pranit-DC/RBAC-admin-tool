@@ -11,7 +11,7 @@ export async function POST() {
     });
 
     // Find Admin roles (case variations)
-    const adminRoles = allRoles.filter(r => r.name.toLowerCase() === 'admin');
+    const adminRoles = allRoles.filter((r: { name: string }) => r.name.toLowerCase() === 'admin');
 
     if (adminRoles.length <= 1) {
       return new Response(
