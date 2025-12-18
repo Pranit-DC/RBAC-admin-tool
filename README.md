@@ -1,39 +1,260 @@
-# RBAC-admin-tool
-A full-stack RBAC (Role-Based Access Control) configuration tool that allows administrators to manage users, roles, and permissions through a secure dashboard with JWT-based authentication.
+# 🔐 RBAC Admin Dashboard
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+A full-stack Role-Based Access Control (RBAC) management system built with Next.js, TypeScript, Prisma, and PostgreSQL. Secure, scalable, and production-ready.
 
-## Getting Started
+## 📖 RBAC Explanation (For a Kid)
 
-First, run the development server:
+RBAC is like a school where teachers have keys to all classrooms, students can only enter their own classroom, and the principal can go everywhere. Each person gets a "role" (teacher, student, principal) that decides what doors they can open. Instead of giving everyone their own special key, we just say "all teachers can do this" and "all students can do that" – making it simple and safe!
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🚀 Tech Stack
+
+- **Frontend**: Next.js 16, React 19, TypeScript, TailwindCSS
+- **Backend**: Next.js API Routes, Prisma ORM 7
+- **Database**: PostgreSQL (Neon)
+- **Authentication**: JWT + httpOnly Cookies, bcrypt
+- **Deployment**: Vercel (ready)
+
+---
+
+## 🗂️ Project Structure
+
+```
+RBAC-admin-tool/
+├── app/
+│   ├── api/
+│   │   ├── auth/          # Authentication endpoints
+│   │   ├── permissions/   # Permission CRUD
+│   │   ├── roles/         # Role CRUD + mappings
+│   │   └── users/         # User management
+│   ├── dashboard/         # Protected dashboard pages
+│   └── page.tsx           # Landing/login page
+├── lib/
+│   └── prisma.ts          # Prisma client singleton
+├── prisma/
+│   ├── schema.prisma      # Database schema
+│   └── migrations/        # Database migrations
+└── middleware.ts          # Auth middleware
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📋 Development Roadmap
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### ✅ Phase 1: Database & Backend (COMPLETE)
+- [x] PostgreSQL setup (Neon)
+- [x] Prisma schema design (5 models)
+- [x] Database migrations
+- [x] Environment configuration
 
-## Learn More
+### ✅ Phase 2: Authentication (COMPLETE)
+- [x] Signup API with bcrypt hashing
+- [x] Login API with JWT generation
+- [x] httpOnly cookie implementation
+- [x] Auth middleware for protected routes
+- [x] API testing via PowerShell scripts
 
-To learn more about Next.js, take a look at the following resources:
+### ✅ Phase 3: Core RBAC APIs (COMPLETE)
+- [x] Permission CRUD APIs
+- [x] Role CRUD APIs
+- [x] Role ↔ Permission mapping
+- [x] User ↔ Role assignment
+- [x] Comprehensive API testing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🚧 Phase 4: Frontend UI (IN PROGRESS)
+- [ ] Login/Signup pages
+- [ ] Dashboard layout with navigation
+- [ ] Permissions management table
+- [ ] Roles management with permission assignment
+- [ ] Users management with role assignment
+- [ ] Protected route implementation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 📦 Phase 5: Polish & Deploy
+- [ ] Error handling & validation
+- [ ] Loading states & feedback
+- [ ] Responsive design
+- [ ] Vercel deployment
+- [ ] Production testing
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🛠️ Setup Instructions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/RBAC-admin-tool.git
+cd RBAC-admin-tool
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Configure Environment Variables
+Create a `.env` file in the root directory:
+```env
+DATABASE_URL="your_postgresql_connection_string"
+JWT_SECRET="your_secure_random_secret_key"
+```
+
+### 4. Run Database Migrations
+```bash
+npx prisma generate
+npx prisma migrate dev
+```
+
+### 5. Start Development Server
+```bash
+npm run dev
+```
+
+Visit [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 🔑 Test Credentials
+
+```
+Email: admin@rbac.com
+Password: admin123
+Role: Admin (all permissions)
+```
+
+---
+
+## 🧪 API Testing
+
+Test the APIs using the included PowerShell scripts:
+
+```powershell
+# Test authentication
+.\test-api.ps1        # Signup API
+.\test-login.ps1      # Login API
+
+# Test RBAC functionality
+.\test-rbac-apis.ps1  # Full RBAC workflow
+```
+
+---
+
+## 📡 API Endpoints
+
+### Authentication
+- `POST /api/auth/signup` - Create new user
+- `POST /api/auth/login` - Login & get JWT
+- `GET /api/auth/me` - Get current user
+
+### Permissions
+- `GET /api/permissions` - List all permissions
+- `POST /api/permissions` - Create permission
+- `GET /api/permissions/[id]` - Get permission details
+- `PUT /api/permissions/[id]` - Update permission
+- `DELETE /api/permissions/[id]` - Delete permission
+
+### Roles
+- `GET /api/roles` - List all roles
+- `POST /api/roles` - Create role
+- `GET /api/roles/[id]` - Get role details
+- `PUT /api/roles/[id]` - Update role
+- `DELETE /api/roles/[id]` - Delete role
+- `POST /api/roles/[id]/permissions` - Assign permissions to role
+- `GET /api/roles/[id]/permissions` - Get role's permissions
+
+### Users
+- `GET /api/users` - List all users
+- `POST /api/users/[id]/roles` - Assign roles to user
+- `GET /api/users/[id]/roles` - Get user's roles
+
+---
+
+## 🗄️ Database Schema
+
+```prisma
+model User {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  password   String
+  created_at DateTime @default(now())
+  user_roles UserRole[]
+}
+
+model Role {
+  id         String         @id @default(uuid())
+  name       String         @unique
+  created_at DateTime       @default(now())
+  user_roles UserRole[]
+  role_permissions RolePermission[]
+}
+
+model Permission {
+  id          String         @id @default(uuid())
+  name        String         @unique
+  description String?
+  created_at  DateTime       @default(now())
+  role_permissions RolePermission[]
+}
+
+model RolePermission {
+  role_id       String
+  permission_id String
+  role          Role       @relation(...)
+  permission    Permission @relation(...)
+  @@id([role_id, permission_id])
+}
+
+model UserRole {
+  user_id String
+  role_id String
+  user    User @relation(...)
+  role    Role @relation(...)
+  @@id([user_id, role_id])
+}
+```
+
+---
+
+## 🔒 Security Features
+
+- ✅ JWT-based authentication
+- ✅ httpOnly cookies (XSS protection)
+- ✅ bcrypt password hashing (10 rounds)
+- ✅ Middleware route protection
+- ✅ CORS configuration
+- ✅ SQL injection prevention (Prisma ORM)
+
+---
+
+## 🚀 Deployment
+
+### Deploy to Vercel
+1. Push code to GitHub
+2. Import project in Vercel
+3. Add environment variables
+4. Deploy!
+
+```bash
+vercel --prod
+```
+
+---
+
+## 📝 License
+
+MIT
+
+---
+
+## 👤 Author
+
+**Prani**  
+Building secure, scalable web applications with modern tech stacks.
+
+---
+
+## 🙏 Acknowledgments
+
+- Next.js team for the amazing framework
+- Prisma for the excellent ORM
+- Neon for PostgreSQL hosting
