@@ -56,9 +56,10 @@ export async function POST(
           where: { id: { in: roleIds } },
         });
 
-        const includesAdmin = newRoles.some(
-          (role) => role.name.toLowerCase() === 'admin'
+                const includesAdmin = newRoles.some(
+        (role: { name: string }) => role.name.toLowerCase() === 'admin'
         );
+
 
         if (!includesAdmin) {
           return new Response(
