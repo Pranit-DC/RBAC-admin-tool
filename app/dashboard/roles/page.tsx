@@ -27,6 +27,8 @@ export default function RolesPage() {
   const [formData, setFormData] = useState({ name: '' });
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
   const [error, setError] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [roleToDelete, setRoleToDelete] = useState<Role | null>(null);
 
   useEffect(() => {
     fetchRoles();
@@ -85,20 +87,46 @@ export default function RolesPage() {
   };
 
   const handleEdit = (role: Role) => {
+    // Block Admin role editing
+    if (role.name.toLowerCase() === 'admin') {
+      setError('Admin role is protected and cannot be modified');
+      return;
+    }
     setEditingId(role.id);
     setFormData({ name: role.name });
     setShowModal(true);
     setError('');
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this role?')) return;
+  const openDeleteModal = (role: Role) => {
+    // Block Admin role deletion
+    if (role.name.toLowerCase() === 'admin') {
+      setError('Admin role is protected and cannot be deleted');
+      return;
+    }
+    setRoleToDelete(role);
+    setShowDeleteModal(true);
+    setError('');
+  };
+
+  const handleDelete = async () => {
+    if (!roleToDelete) return;
 
     try {
-      await fetch(`/api/roles/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/roles/${roleToDelete.id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error || 'Failed to delete role');
+        setShowDeleteModal(false);
+        return;
+      }
+      setShowDeleteModal(false);
+      setRoleToDelete(null);
+      setError('');
       fetchRoles();
     } catch (err) {
-      alert('Failed to delete role');
+      setError('Failed to delete role');
+      setShowDeleteModal(false);
     }
   };
 
@@ -110,6 +138,11 @@ export default function RolesPage() {
   };
 
   const openPermissionsModal = (role: Role) => {
+    // Block Admin role permission modification
+    if (role.name.toLowerCase() === 'admin') {
+      setError('Admin role permissions cannot be modified');
+      return;
+    }
     setSelectedRole(role.id);
     setSelectedPermissions(role.role_permissions.map(rp => rp.permission.id));
     setShowPermModal(true);
@@ -167,6 +200,29 @@ export default function RolesPage() {
         </button>
       </div>
 
+      {/* Error Banner */}
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start">
+          <div className="shrink-0">
+            <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <div className="ml-3 flex-1">
+            <p className="text-sm font-medium text-red-800">{error}</p>
+          </div>
+          <button
+            onClick={() => setError('')}
+            className="ml-3 shrink-0 text-red-400 hover:text-red-500"
+          >
+            <span className="sr-only">Dismiss</span>
+            <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      )}
+
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -186,8 +242,10 @@ export default function RolesPage() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {roles.map((role) => (
-              <tr key={role.id} className="hover:bg-gray-50:bg-gray-800/50">
+            {roles.map((role) => {
+              const isAdminRole = role.name.toLowerCase() === 'admin';
+              return (
+              <tr key={role.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="text-sm font-medium text-gray-900">{role.name}</span>
                 </td>
@@ -213,27 +271,57 @@ export default function RolesPage() {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <button
-                    onClick={() => openPermissionsModal(role)}
-                    className="text-green-600 hover:text-green-900 mr-4"
-                  >
-                    Permissions
-                  </button>
-                  <button
-                    onClick={() => handleEdit(role)}
-                    className="text-blue-600 hover:text-blue-900 mr-4"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(role.id)}
-                    className="text-red-600 hover:text-red-900"
-                  >
-                    Delete
-                  </button>
+                  {isAdminRole ? (
+                    <div className="flex justify-end items-center gap-2">
+                      <button
+                        disabled
+                        className="px-3 py-1.5 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed"
+                        title="Admin role permissions cannot be modified"
+                      >
+                        Permissions
+                      </button>
+                      <button
+                        disabled
+                        className="px-3 py-1.5 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed"
+                        title="Admin role is protected and cannot be modified"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        disabled
+                        className="px-3 py-1.5 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed"
+                        title="Admin role is protected and cannot be deleted"
+                      >
+                        Delete
+                      </button>
+                      <span className="ml-2 text-xs text-blue-600 font-medium">🔒 Protected</span>
+                    </div>
+                  ) : (
+                    <div className="flex justify-end gap-2">
+                      <button
+                        onClick={() => openPermissionsModal(role)}
+                        className="px-3 py-1.5 text-sm font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors"
+                      >
+                        Permissions
+                      </button>
+                      <button
+                        onClick={() => handleEdit(role)}
+                        className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => openDeleteModal(role)}
+                        className="px-3 py-1.5 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
         {roles.length === 0 && (
@@ -267,7 +355,7 @@ export default function RolesPage() {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500:ring-blue-600 text-gray-900"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   placeholder="e.g., Admin"
                 />
               </div>
@@ -276,7 +364,7 @@ export default function RolesPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50:bg-gray-800/50 transition-colors"
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   Cancel
                 </button>
@@ -308,13 +396,13 @@ export default function RolesPage() {
               {permissions.map((perm) => (
                 <label
                   key={perm.id}
-                  className="flex items-start p-3 border border-gray-200 rounded-lg hover:bg-gray-50:bg-gray-800/50 cursor-pointer"
+                  className="flex items-start p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
                 >
                   <input
                     type="checkbox"
                     checked={selectedPermissions.includes(perm.id)}
                     onChange={() => handlePermissionToggle(perm.id)}
-                    className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500:ring-blue-600 border-gray-300 rounded"
+                    className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-900">{perm.name}</p>
@@ -339,6 +427,53 @@ export default function RolesPage() {
                 className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && roleToDelete && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl border border-gray-200 shadow-xl p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Delete Role</h2>
+            
+            <div className="mb-6">
+              <p className="text-sm text-gray-700 mb-2">
+                Are you sure you want to delete the following role?
+              </p>
+              <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                <p className="text-sm font-medium text-gray-900">{roleToDelete.name}</p>
+                <p className="text-xs text-gray-600 mt-1">
+                  Permissions: {roleToDelete.role_permissions.length}
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg mb-6">
+              <p className="text-sm text-red-800 font-medium">⚠️ This action cannot be undone</p>
+              <p className="text-xs text-red-600 mt-1">
+                All user assignments and permission mappings will be permanently removed.
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setRoleToDelete(null);
+                }}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Delete Role
               </button>
             </div>
           </div>

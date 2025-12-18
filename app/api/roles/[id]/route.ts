@@ -33,9 +33,18 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const { id } = await params;
     const { name } = await req.json();
 
+    // 🔥 EDGE CASE 2 & 3: Protect Admin role from modification
+    const existingRole = await prisma.role.findUnique({ where: { id } });
+    if (existingRole?.name.toLowerCase() === 'admin') {
+      return new Response(
+        JSON.stringify({ error: 'Admin role cannot be modified' }), 
+        { status: 403 }
+      );
+    }
+
     const role = await prisma.role.update({
       where: { id },
-      data: { name },
+      data: { name: name.trim().toLowerCase() },
     });
 
     return new Response(JSON.stringify(role), { status: 200 });
@@ -49,6 +58,16 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   try {
     const { id } = await params;
 
+    // 🔥 EDGE CASE 3: Prevent deletion of Admin role
+    const role = await prisma.role.findUnique({ where: { id } });
+    if (role?.name.toLowerCase() === 'admin') {
+      return new Response(
+        JSON.stringify({ error: 'Admin role cannot be deleted' }), 
+        { status: 403 }
+      );
+    }
+
+    // 🔥 EDGE CASE 9: Cascade delete handled by Prisma onDelete: Cascade
     await prisma.role.delete({ where: { id } });
 
     return new Response(JSON.stringify({ message: 'Role deleted' }), { status: 200 });

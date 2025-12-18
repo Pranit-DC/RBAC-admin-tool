@@ -46,9 +46,15 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   try {
     const { id } = await params;
 
+    // First, delete all role_permission assignments for this permission
+    await prisma.rolePermission.deleteMany({
+      where: { permission_id: id },
+    });
+
+    // Then delete the permission itself
     await prisma.permission.delete({ where: { id } });
 
-    return new Response(JSON.stringify({ message: 'Permission deleted' }), { status: 200 });
+    return new Response(JSON.stringify({ message: 'Permission deleted successfully' }), { status: 200 });
   } catch (err: any) {
     return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }

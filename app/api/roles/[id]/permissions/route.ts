@@ -11,6 +11,15 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       return new Response(JSON.stringify({ error: 'permissionIds array is required' }), { status: 400 });
     }
 
+    // 🔥 EDGE CASE 2: Prevent modifying Admin role permissions
+    const role = await prisma.role.findUnique({ where: { id: roleId } });
+    if (role?.name.toLowerCase() === 'admin') {
+      return new Response(
+        JSON.stringify({ error: 'Admin role permissions cannot be modified' }), 
+        { status: 403 }
+      );
+    }
+
     // Delete existing permissions for this role
     await prisma.rolePermission.deleteMany({
       where: { role_id: roleId },

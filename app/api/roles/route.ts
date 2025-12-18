@@ -27,13 +27,16 @@ export async function POST(req: NextRequest) {
       return new Response(JSON.stringify({ error: 'Name is required' }), { status: 400 });
     }
 
-    const existing = await prisma.role.findUnique({ where: { name } });
+    // Normalize role name to lowercase to prevent case sensitivity issues
+    const normalizedName = name.trim().toLowerCase();
+
+    const existing = await prisma.role.findUnique({ where: { name: normalizedName } });
     if (existing) {
       return new Response(JSON.stringify({ error: 'Role already exists' }), { status: 409 });
     }
 
     const role = await prisma.role.create({
-      data: { name },
+      data: { name: normalizedName },
     });
 
     return new Response(JSON.stringify(role), { status: 201 });
