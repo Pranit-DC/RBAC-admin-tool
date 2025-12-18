@@ -249,16 +249,3 @@ vercel --prod
 MIT
 
 ---
-
-## 👤 Author
-
-**Prani**  
-Building secure, scalable web applications with modern tech stacks.
-
----
-
-## 🙏 Acknowledgments
-
-- Next.js team for the amazing framework
-- Prisma for the excellent ORM
-- Neon for PostgreSQL hosting
