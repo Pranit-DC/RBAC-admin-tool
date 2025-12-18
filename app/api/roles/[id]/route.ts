@@ -33,7 +33,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const { id } = await params;
     const { name } = await req.json();
 
-    // 🔥 EDGE CASE 2 & 3: Protect Admin role from modification
+    // EDGE CASE 2 & 3: Protect Admin role from modification
     const existingRole = await prisma.role.findUnique({ where: { id } });
     if (existingRole?.name.toLowerCase() === 'admin') {
       return new Response(
@@ -58,7 +58,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   try {
     const { id } = await params;
 
-    // 🔥 EDGE CASE 3: Prevent deletion of Admin role
+    // EDGE CASE 3: Prevent deletion of Admin role
     const role = await prisma.role.findUnique({ where: { id } });
     if (role?.name.toLowerCase() === 'admin') {
       return new Response(
@@ -67,7 +67,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
       );
     }
 
-    // 🔥 EDGE CASE 9: Cascade delete handled by Prisma onDelete: Cascade
+    // EDGE CASE 9: Cascade delete handled by Prisma onDelete: Cascade
     await prisma.role.delete({ where: { id } });
 
     return new Response(JSON.stringify({ message: 'Role deleted' }), { status: 200 });

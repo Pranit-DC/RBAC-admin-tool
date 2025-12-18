@@ -15,7 +15,7 @@ async function fixAdminPermissions() {
     });
 
     if (!adminRole) {
-      console.error('❌ Admin role not found!');
+      console.error('ERROR: Admin role not found!');
       process.exit(1);
     }
 
@@ -35,12 +35,12 @@ async function fixAdminPermissions() {
     );
 
     if (missingPermissions.length === 0) {
-      console.log('✅ Admin already has all permissions assigned!');
+      console.log('SUCCESS: Admin already has all permissions assigned!');
       await prisma.$disconnect();
       process.exit(0);
     }
 
-    console.log(`⚠️  Found ${missingPermissions.length} missing permissions:\n`);
+    console.log(`WARNING: Found ${missingPermissions.length} missing permissions:\n`);
     missingPermissions.forEach(p => {
       console.log(`   - ${p.name}`);
     });
@@ -55,15 +55,15 @@ async function fixAdminPermissions() {
           permission_id: permission.id,
         },
       });
-      console.log(`   ✅ Assigned: ${permission.name}`);
+      console.log(`   SUCCESS: Assigned: ${permission.name}`);
     }
 
-    console.log('\n✅ All permissions now assigned to Admin role!');
+    console.log('\nSUCCESS: All permissions now assigned to Admin role!');
     console.log(`📊 Admin now has: ${allPermissions.length} permissions\n`);
 
     await prisma.$disconnect();
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error('ERROR:', error);
     await prisma.$disconnect();
     process.exit(1);
   }

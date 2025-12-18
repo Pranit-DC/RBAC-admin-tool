@@ -1,5 +1,5 @@
 // Middleware to check user permissions
-// 🔥 EDGE CASE 11: Backend permission validation
+// EDGE CASE 11: Backend permission validation
 
 import prisma from './prisma';
 
@@ -21,7 +21,7 @@ export async function checkUserPermission(userId: string, requiredPermission: st
       },
     });
 
-    // 🔥 EDGE CASE 8: Permission merge (union, not intersection)
+    // EDGE CASE 8: Permission merge (union, not intersection)
     // If user has ANY role with the permission, allow access
     for (const userRole of userRoles) {
       const hasPermission = userRole.role.role_permissions.some(
@@ -56,7 +56,7 @@ export async function getUserPermissions(userId: string): Promise<string[]> {
       },
     });
 
-    // 🔥 EDGE CASE 8: Merge permissions from all roles (union)
+    // EDGE CASE 8: Merge permissions from all roles (union)
     const permissionSet = new Set<string>();
     
     for (const userRole of userRoles) {

@@ -1,14 +1,14 @@
-# 🔐 RBAC Admin Dashboard
+# RBAC Admin Dashboard
 
 A full-stack Role-Based Access Control (RBAC) management system built with Next.js, TypeScript, Prisma, and PostgreSQL. Secure, scalable, and production-ready.
 
-## 📖 RBAC Explanation (For a Kid)
+## RBAC Explanation (For a Kid)
 
 RBAC is like a school where teachers have keys to all classrooms, students can only enter their own classroom, and the principal can go everywhere. Each person gets a "role" (teacher, student, principal) that decides what doors they can open. Instead of giving everyone their own special key, we just say "all teachers can do this" and "all students can do that" – making it simple and safe!
 
 ---
 
-## 🚀 Tech Stack
+## Tech Stack
 
 - **Frontend**: Next.js 16, React 19, TypeScript, TailwindCSS
 - **Backend**: Next.js API Routes, Prisma ORM 7
@@ -18,7 +18,7 @@ RBAC is like a school where teachers have keys to all classrooms, students can o
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 RBAC-admin-tool/
@@ -40,29 +40,29 @@ RBAC-admin-tool/
 
 ---
 
-## 📋 Development Roadmap
+## Development Roadmap
 
-### ✅ Phase 1: Database & Backend (COMPLETE)
+### Phase 1: Database & Backend (COMPLETE)
 - [x] PostgreSQL setup (Neon)
 - [x] Prisma schema design (5 models)
 - [x] Database migrations
 - [x] Environment configuration
 
-### ✅ Phase 2: Authentication (COMPLETE)
+### Phase 2: Authentication (COMPLETE)
 - [x] Signup API with bcrypt hashing
 - [x] Login API with JWT generation
 - [x] httpOnly cookie implementation
 - [x] Auth middleware for protected routes
 - [x] API testing via PowerShell scripts
 
-### ✅ Phase 3: Core RBAC APIs (COMPLETE)
+### Phase 3: Core RBAC APIs (COMPLETE)
 - [x] Permission CRUD APIs
 - [x] Role CRUD APIs
 - [x] Role ↔ Permission mapping
 - [x] User ↔ Role assignment
 - [x] Comprehensive API testing
 
-### ✅ Phase 4: Frontend UI (COMPLETE)
+### Phase 4: Frontend UI (COMPLETE)
 - [x] Login/Signup pages with form validation
 - [x] Dashboard layout with sidebar navigation
 - [x] Permissions management table with CRUD modals
@@ -72,7 +72,7 @@ RBAC-admin-tool/
 - [x] Logout functionality
 - [x] Clean, consistent UI design (no gradients)
 
-### 🚧 Phase 5: AI Command Box (BONUS - IN PROGRESS)
+### Phase 5: AI Command Box (BONUS - IN PROGRESS)
 - [x] AI command input interface
 - [x] Natural language intent parsing
 - [x] Map commands to CRUD operations:
@@ -82,7 +82,7 @@ RBAC-admin-tool/
 - [x] API endpoint `/api/ai-command`
 - [x] Real-time command execution feedback
 
-### 📦 Phase 6: Polish & Deploy
+### Phase 6: Polish & Deploy
 - [ ] Error handling improvements
 - [ ] Loading states & user feedback
 - [x] Responsive design enhancements
@@ -91,7 +91,7 @@ RBAC-admin-tool/
 
 ---
 
-## 🛠️ Setup Instructions
+## Setup Instructions
 
 ### 1. Clone the Repository
 ```bash
@@ -227,21 +227,21 @@ model UserRole {
 
 ---
 
-## 🔒 Security Features
+## Security Features
 
-- ✅ JWT-based authentication
-- ✅ httpOnly cookies (XSS protection)
-- ✅ bcrypt password hashing (10 rounds)
-- ✅ Middleware route protection
-- ✅ CORS configuration
-- ✅ SQL injection prevention (Prisma ORM)
-- ✅ Environment variables for sensitive data
-- ✅ `.env` excluded from version control
+- JWT-based authentication
+- httpOnly cookies (XSS protection)
+- bcrypt password hashing (10 rounds)
+- Middleware route protection
+- CORS configuration
+- SQL injection prevention (Prisma ORM)
+- Environment variables for sensitive data
+- `.env` excluded from version control
 
-> **⚠️ Security Note**: This README shows API endpoints and schema design for educational/portfolio purposes. All sensitive credentials (DATABASE_URL, JWT_SECRET) are stored in `.env` file which is **never committed** to the repository. The test credentials are for demo purposes only.
+> **Security Note**: This README shows API endpoints and schema design for educational/portfolio purposes. All sensitive credentials (DATABASE_URL, JWT_SECRET) are stored in `.env` file which is **never committed** to the repository. The test credentials are for demo purposes only.
 ---
 
-## 📝 License
+## License
 
 MIT
 

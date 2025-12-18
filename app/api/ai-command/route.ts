@@ -5,7 +5,7 @@ import { NextRequest } from 'next/server';
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
-// 🔥 STRICT ALLOWLIST: Only these actions are permitted
+// STRICT ALLOWLIST: Only these actions are permitted
 const ALLOWED_ACTIONS = [
   'CREATE_PERMISSION',
   'ASSIGN_PERMISSION_TO_ROLE',
@@ -23,7 +23,7 @@ interface ParsedCommand {
   userEmail?: string;
 }
 
-// 🔥 INTENT VALIDATION: Check if command contains explicit RBAC intent
+// INTENT VALIDATION: Check if command contains explicit RBAC intent
 function hasExplicitRBACIntent(command: string): boolean {
   const lowerCommand = command.toLowerCase().trim();
   
@@ -59,7 +59,7 @@ function hasExplicitRBACIntent(command: string): boolean {
 }
 
 async function parseCommand(command: string): Promise<ParsedCommand> {
-  // 🔥 RULE 1: Explicit Intent Requirement - Check before calling AI
+  // RULE 1: Explicit Intent Requirement - Check before calling AI
   if (!hasExplicitRBACIntent(command)) {
     console.log('Command rejected: No explicit RBAC intent detected');
     return { action: 'UNKNOWN' };
@@ -137,13 +137,13 @@ Return ONLY valid JSON in this exact format (no markdown, no extra text):
   const result = await model.generateContent(prompt);
   const text = result.response.text().trim();
   
-  // 🔥 EDGE CASE 15: Validate AI response - remove markdown, validate JSON
+  // EDGE CASE 15: Validate AI response - remove markdown, validate JSON
   const jsonText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
   
   try {
     const parsed = JSON.parse(jsonText);
     
-    // 🔥 RULE 3: AI Output Allowlisting - Strict validation
+    // RULE 3: AI Output Allowlisting - Strict validation
     if (!parsed.action) {
       console.error('AI response missing action field');
       return { action: 'UNKNOWN' };
@@ -171,7 +171,7 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
           return { success: false, message: 'Permission name is required' };
         }
 
-        // 🔥 EDGE CASE 14: Normalize to lowercase for case-insensitive uniqueness
+        // EDGE CASE 14: Normalize to lowercase for case-insensitive uniqueness
         const normalizedName = name.toLowerCase();
 
         const existing = await prisma.permission.findUnique({ where: { name: normalizedName } });
@@ -186,7 +186,7 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
           },
         });
 
-        // 🔥 INVARIANT: Auto-assign to Admin role
+        // INVARIANT: Auto-assign to Admin role
         // Find Admin role (case-insensitive)
         const allRoles = await prisma.role.findMany();
         const adminRole = allRoles.find(r => r.name.toLowerCase() === 'admin');
@@ -210,7 +210,7 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
         
         return { 
           success: true, 
-          message: `✅ Permission "${normalizedName}" created and automatically assigned to Admin role.`,
+          message: `Permission "${normalizedName}" created and automatically assigned to Admin role.`,
           data: permission 
         };
       }
@@ -221,7 +221,7 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
           return { success: false, message: 'Both permission and role names are required' };
         }
 
-        // 🔥 EDGE CASE 14: Use lowercase for lookups
+        // EDGE CASE 14: Use lowercase for lookups
         const permission = await prisma.permission.findUnique({ where: { name: name.toLowerCase() } });
         const role = await prisma.role.findUnique({ where: { name: roleName.toLowerCase() } });
 
@@ -232,7 +232,7 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
           return { success: false, message: `Role "${roleName}" not found` };
         }
 
-        // 🔥 EDGE CASE 2: Prevent modifying Admin role permissions
+        // EDGE CASE 2: Prevent modifying Admin role permissions
         if (role.name.toLowerCase() === 'admin') {
           return { success: false, message: 'Admin role permissions cannot be modified via AI commands' };
         }
@@ -257,7 +257,7 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
           },
         });
 
-        return { success: true, message: `✅ Permission "${name}" assigned to role "${roleName}" successfully` };
+        return { success: true, message: `Permission "${name}" assigned to role "${roleName}" successfully` };
       }
 
       case 'ASSIGN_ROLE_TO_USER': {
@@ -266,7 +266,7 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
           return { success: false, message: 'Both role name and user email are required' };
         }
 
-        // 🔥 EDGE CASE 14: Use lowercase for role lookup
+        // EDGE CASE 14: Use lowercase for role lookup
         const role = await prisma.role.findUnique({ where: { name: roleName.toLowerCase() } });
         const user = await prisma.user.findUnique({ where: { email: userEmail } });
 
@@ -297,7 +297,7 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
           },
         });
 
-        return { success: true, message: `✅ Role "${roleName}" assigned to user "${userEmail}" successfully` };
+        return { success: true, message: `Role "${roleName}" assigned to user "${userEmail}" successfully` };
       }
 
       case 'DELETE_PERMISSION': {
@@ -306,15 +306,15 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
           return { success: false, message: 'Permission name is required' };
         }
 
-        // 🔥 EDGE CASE 14: Use lowercase for lookup
+        // EDGE CASE 14: Use lowercase for lookup
         const permission = await prisma.permission.findUnique({ where: { name: name.toLowerCase() } });
         if (!permission) {
           return { success: false, message: `Permission "${name}" not found` };
         }
 
-        // 🔥 EDGE CASE 4: Cascade delete handled by Prisma schema (onDelete: Cascade)
+        // EDGE CASE 4: Cascade delete handled by Prisma schema (onDelete: Cascade)
         await prisma.permission.delete({ where: { id: permission.id } });
-        return { success: true, message: `✅ Permission "${name}" deleted successfully. All role assignments removed.` };
+        return { success: true, message: `Permission "${name}" deleted successfully. All role assignments removed.` };
       }
 
       case 'DELETE_USER': {
@@ -337,7 +337,7 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
           return { success: false, message: `User "${userEmail}" not found` };
         }
 
-        // 🔥 SAFETY: Check if target is Admin
+        // SAFETY: Check if target is Admin
         const isTargetAdmin = user.user_roles.some(
           (ur) => ur.role.name.toLowerCase() === 'admin'
         );
@@ -371,14 +371,14 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
       }
 
       default:
-        // 🔥 RULE 4: Safe Failure Behavior - No mutations, clear message
+        // RULE 4: Safe Failure Behavior - No mutations, clear message
         return { 
           success: false, 
           message: 'Command not recognized. No action was taken. Please use explicit RBAC commands like "create permission users.test" or "assign permission users.read to role Editor".' 
         };
     }
   } catch (err: any) {
-    // 🔥 RULE 4: Safe Failure - Log error but return safe message
+    // RULE 4: Safe Failure - Log error but return safe message
     console.error('Command execution error:', err);
     return { 
       success: false, 
@@ -411,11 +411,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 🔥 RULE 5: Backend Enforcement - Intent validation happens server-side
+    // RULE 5: Backend Enforcement - Intent validation happens server-side
     // Parse command using AI (with built-in intent validation)
     const parsed = await parseCommand(command);
 
-    // 🔥 RULE 2 & 4: No Guessing, Safe Failure
+    // RULE 2 & 4: No Guessing, Safe Failure
     // If AI couldn't determine explicit intent, reject immediately
     if (parsed.action === 'UNKNOWN') {
       return new Response(

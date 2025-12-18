@@ -15,7 +15,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       return new Response(JSON.stringify({ error: 'At least one role must be selected' }), { status: 400 });
     }
 
-    // 🔒 Get current user from JWT
+    // Get current user from JWT
     const cookieHeader = req.headers.get('cookie') || '';
     const cookies = parse(cookieHeader);
     const token = cookies.token;
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     const payload: any = jwt.verify(token, JWT_SECRET);
     const currentUserId = payload.sub;
 
-    // 🔒 EDGE CASE: Prevent admin from removing their own admin role
+    // EDGE CASE: Prevent admin from removing their own admin role
     if (currentUserId === userId) {
       // Get current user's roles
       const currentUserRoles = await prisma.userRole.findMany({

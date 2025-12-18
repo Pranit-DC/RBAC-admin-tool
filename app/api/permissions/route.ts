@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       return new Response(JSON.stringify({ error: 'Name is required' }), { status: 400 });
     }
 
-    // 🔥 CONSTRAINT: Normalize to lowercase dot-notation (resource.action)
+    // CONSTRAINT: Normalize to lowercase dot-notation (resource.action)
     // Replace underscores, spaces, and multiple separators with dots
     let normalizedName = name.trim().toLowerCase()
       .replace(/[_\s]+/g, '.')  // Replace underscores and spaces with dots
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
       data: { name: normalizedName, description },
     });
 
-    // 🔥 INVARIANT: Auto-assign new permission to Admin role
+    // INVARIANT: Auto-assign new permission to Admin role
     // Find Admin role (case-insensitive)
     const allRoles = await prisma.role.findMany();
     const adminRole = allRoles.find(r => r.name.toLowerCase() === 'admin');

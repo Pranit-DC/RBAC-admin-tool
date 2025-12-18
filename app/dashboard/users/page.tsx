@@ -92,7 +92,7 @@ export default function UsersPage() {
       return;
     }
 
-    // 🔒 Frontend validation: prevent removing own admin role
+    // Frontend validation: prevent removing own admin role
     if (currentUserId === selectedUser) {
       const currentUser = users.find(u => u.id === selectedUser);
       const hadAdminRole = currentUser?.user_roles.some(
@@ -306,7 +306,7 @@ export default function UsersPage() {
                     }`}>
                       {role.name}
                       {isOwnAdminRole && (
-                        <span className="ml-2 text-xs text-blue-600">🔒 Protected</span>
+                        <span className="ml-2 text-xs text-blue-600">Protected</span>
                       )}
                     </span>
                   </label>
@@ -322,7 +322,7 @@ export default function UsersPage() {
 
             {selectedRoles.length === 0 && roles.length > 0 && (
               <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                <p className="text-sm text-amber-700">⚠️ Please select at least one role</p>
+                <p className="text-sm text-amber-700">Please select at least one role</p>
               </div>
             )}
 
@@ -365,7 +365,7 @@ export default function UsersPage() {
             </div>
 
             <div className="p-4 bg-red-50 border border-red-200 rounded-lg mb-6">
-              <p className="text-sm text-red-800 font-medium">⚠️ This action cannot be undone</p>
+              <p className="text-sm text-red-800 font-medium">WARNING: This action cannot be undone</p>
               <p className="text-xs text-red-600 mt-1">
                 All role assignments will be permanently removed.
               </p>

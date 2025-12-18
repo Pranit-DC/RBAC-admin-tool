@@ -13,12 +13,12 @@ interface JWTPayload {
 // DELETE user with comprehensive safeguards
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const targetUserId = params.id;
+    const { id: targetUserId } = await params;
 
-    // 🔥 RULE 1: Authorization - Only Admin can delete users
+    // RULE 1: Authorization - Only Admin can delete users
     const cookieStore = await cookies();
     const token = cookieStore.get('auth-token');
 
@@ -68,7 +68,7 @@ export async function DELETE(
       );
     }
 
-    // 🔥 RULE 2: Self-Deletion Protection
+    // RULE 2: Self-Deletion Protection
     if (currentUserId === targetUserId) {
       return new Response(
         JSON.stringify({ 
@@ -79,7 +79,7 @@ export async function DELETE(
       );
     }
 
-    // 🔥 RULE 3: Last-Admin Protection
+    // RULE 3: Last-Admin Protection
     // Check if target user has Admin role
     const targetUser = await prisma.user.findUnique({
       where: { id: targetUserId },
@@ -125,7 +125,7 @@ export async function DELETE(
       }
     }
 
-    // 🔥 RULE 8: Data Integrity - Transactional deletion with cascade
+    // RULE 8: Data Integrity - Transactional deletion with cascade
     await prisma.$transaction(async (tx) => {
       // Delete user_roles first
       await tx.userRole.deleteMany({

@@ -294,7 +294,7 @@ export default function RolesPage() {
                       >
                         Delete
                       </button>
-                      <span className="ml-2 text-xs text-blue-600 font-medium">🔒 Protected</span>
+                      <span className="ml-2 text-xs text-blue-600 font-medium">Protected</span>
                     </div>
                   ) : (
                     <div className="flex justify-end gap-2">
@@ -452,7 +452,7 @@ export default function RolesPage() {
             </div>
 
             <div className="p-4 bg-red-50 border border-red-200 rounded-lg mb-6">
-              <p className="text-sm text-red-800 font-medium">⚠️ This action cannot be undone</p>
+              <p className="text-sm text-red-800 font-medium">WARNING: This action cannot be undone</p>
               <p className="text-xs text-red-600 mt-1">
                 All user assignments and permission mappings will be permanently removed.
               </p>

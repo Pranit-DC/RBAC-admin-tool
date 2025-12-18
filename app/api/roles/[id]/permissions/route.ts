@@ -11,7 +11,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       return new Response(JSON.stringify({ error: 'permissionIds array is required' }), { status: 400 });
     }
 
-    // 🔥 EDGE CASE 2: Prevent modifying Admin role permissions
+    // EDGE CASE 2: Prevent modifying Admin role permissions
     const role = await prisma.role.findUnique({ where: { id: roleId } });
     if (role?.name.toLowerCase() === 'admin') {
       return new Response(

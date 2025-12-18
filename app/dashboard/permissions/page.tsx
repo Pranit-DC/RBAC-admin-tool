@@ -62,7 +62,7 @@ export default function PermissionsPage() {
       
       // Show success message if permission was auto-assigned to Admin
       if (data.autoAssigned && !editingId) {
-        setSuccessMessage('✅ Permission created and automatically assigned to Admin role');
+        setSuccessMessage('Permission created and automatically assigned to Admin role');
         setTimeout(() => setSuccessMessage(''), 5000); // Clear after 5 seconds
       }
 
@@ -313,7 +313,7 @@ export default function PermissionsPage() {
             </div>
 
             <div className="p-4 bg-red-50 border border-red-200 rounded-lg mb-6">
-              <p className="text-sm text-red-800 font-medium">⚠️ This action cannot be undone</p>
+              <p className="text-sm text-red-800 font-medium">WARNING: This action cannot be undone</p>
               <p className="text-xs text-red-600 mt-1">
                 All role assignments for this permission will be permanently removed.
               </p>
