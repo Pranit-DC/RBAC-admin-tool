@@ -191,10 +191,10 @@ async function executeCommand(parsed: ParsedCommand): Promise<{ success: boolean
         // Find Admin role (case-insensitive)
                        
         // INVARIANT: Auto-assign to Admin role
-        const allRoles: Role[] = await prisma.role.findMany();
+        const allRoles = await prisma.role.findMany();
 
         const adminRole = allRoles.find(
-        (r: Role) => r.name.toLowerCase() === 'admin'
+        (r) => r.name.toLowerCase() === 'admin'
         );
 
         if (!adminRole) {
