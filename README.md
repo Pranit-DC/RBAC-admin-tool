@@ -223,6 +223,10 @@ model UserRole {
 - ✅ Middleware route protection
 - ✅ CORS configuration
 - ✅ SQL injection prevention (Prisma ORM)
+- ✅ Environment variables for sensitive data
+- ✅ `.env` excluded from version control
+
+> **⚠️ Security Note**: This README shows API endpoints and schema design for educational/portfolio purposes. All sensitive credentials (DATABASE_URL, JWT_SECRET) are stored in `.env` file which is **never committed** to the repository. The test credentials are for demo purposes only.
 
 ---
 
